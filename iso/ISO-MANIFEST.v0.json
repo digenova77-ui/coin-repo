@@ -1,0 +1,23 @@
+{
+  "alg": "Ed25519",
+  "key_id": "a271-8e62-3bff-02d2",
+  "payload": {
+    "chain": {
+      "genesis_hash": "dd84eca0317ae13fefa9b53654e37d7cef8e3cfeeea7c360cebd7f353090995b",
+      "head_hash": "6a95cdda044b4558fd985f64383eea5a7021767c219ad6085fe14c0e11c6488c",
+      "height": 1
+    },
+    "identity_law": "The image carries FORM, never identity. A spawned copy is inert until the enrollment ceremony births its own key on its own node. Copies are not different entities (P-4).",
+    "image_bytes": 112640,
+    "image_file": "kernel-iso-v0.tar",
+    "image_sha256": "cbf11a216f3518947ecd83472ee9a1173ac50dd10dbf898fe043e5b8114047f6",
+    "inner_manifest_sha256": "fabd3ae67a72996454e0af97cc93ad04601f27d13a59c3576858c8387e6f1bc5",
+    "iso_version": "v0",
+    "key_status": "TRANSITIONAL - on-lane keys; this record is LEGACY and will be re-sealed when the owner-device ceremony key arms",
+    "pinned_at": "2026-10-13T00:36:38Z",
+    "statement": "Permanent restore + spawn image of the kernel, BETA. The image itself stays in ~/workspace/kernel-iso/; this signed envelope is the published record \u2014 manifest + hashes, per the Tier 0 pattern (ISO-SPEC.md section 6).",
+    "status": "BETA",
+    "type": "kernel-iso-release"
+  },
+  "sig": "nFqsr1ApCUUV2EJIGj1LTvEjbVWvzi/SnKkEZXQ/dApYey16PbTjBIjOlBaw0KHma4d22qBPYkBkRtPx6s5OCQ=="
+}
