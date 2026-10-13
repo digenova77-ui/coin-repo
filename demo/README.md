@@ -21,13 +21,19 @@ feel. It moves no value, signs nothing, and connects to nothing.
   unbuilt kernel (spec §4; build items W1–W8 of the coin-live design)
   — weeks of engineering, buildable now, not built yet.
 
-## The coin-file — DESIGN, not staged as a file
+## The coin-file — W8, built Oct 12, 2026
 
-There is no coin file to hold yet, and this directory will not fake
-one. The one-file world ("one file, any computer, open it and the
-world boots") is specified in
-`~/workspace/goals/idea-tracking/files/15-coin-vm-architecture.md`
-§2 — the WASM/browser build is its demo path — and packaging it is
-build item W8 (2–4 weeks) of `~/workspace/coin-live/DESIGN.md` §4.
-What is staged here is the honest pointer, not a counterfeit boot.
-When W8 lands, the file lands here, labeled, with its hash.
+The coin file exists now: `coin.py`, at the root of this repo. It is
+not in `demo/` because it is not a demo surface — it is the working
+verifier form of the coin: one self-contained file (python3, stdlib
+only) carrying the dual-pipe verifier, the W1 kernel fold, and the
+published chain. Run `python3 coin.py verify` and it checks the
+signed head manifest, the kernel chain's cross-signed checkpoints,
+and the fold — locally, no server needed — and fetches the current
+head through the endpoint registry to compare. It issues nothing,
+moves no value, and its build is byte-deterministic: rebuild it with
+`tools/build_coinfile.py` and the SHA-256 matches
+(`cb6ea5453e5df9b39fb9eb98f80b125cb27ba98cb49a11d16505018425432855`
+at this publication). The richer forms of the one-file world in
+`15-coin-vm-architecture.md` §2 (native binaries per platform, the
+WASM/browser build) remain DESIGN.

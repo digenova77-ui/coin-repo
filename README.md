@@ -36,5 +36,11 @@ CODE + RULES (public) · LEDGER (public, mirrored) · KEYS (never here)
   fetches hash-named things only; endpoints are data, never trust.
 - `demo/` — DEMO surfaces, labeled on their faces and in `demo/README.md`.
   They move no value and sign nothing.
+- `kernel/` — the W1 deterministic ledger kernel (built Oct 12, 2026):
+  append/verify with the dual-pipe verifier as its verify path, state
+  derived only by folding, issuance refused by construction.
+- `coin.py` — the coin as one file (W8): the verifier + kernel fold +
+  the published chain in a single self-contained file.
+  `python3 coin.py verify` checks everything locally.
 - Keys in `keys/` are TRANSITIONAL (on-lane, pending the owner-device
   ceremony); records they sign are LEGACY and will be re-sealed.

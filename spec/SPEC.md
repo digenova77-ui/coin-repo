@@ -79,8 +79,14 @@ is no validator set, no Unique Node List, nothing to capture.
 
 - Source: `~/workspace/goals/idea-tracking/files/15-coin-vm-architecture.md`
   §1 (the V2 manifest sketch is REAL; the specification is DESIGN).
-- Grade: DESIGN — the kernel is unbuilt. It is build item W1 of the
-  coin-live design and the critical path for everything behind it.
+- Grade: **W1 BUILT** (Oct 12, 2026) — the deterministic kernel exists
+  as running code in `kernel/` of this repo: append/verify over the
+  hash-chained ledger, state derived only by folding, the dual-pipe
+  verifier as its verify path, a Joule-meter seam (MODELED only, W6
+  unbuilt), no network I/O, and issuance refused by construction with
+  tests proving the refusal. It changes nothing in §9: the battery
+  has not been executed against it and the verdict there stands
+  until it is. Transaction-level grant signatures (W2) are not built.
 
 ## 5. Identity — Unity ID binding
 
@@ -145,8 +151,14 @@ registry (`endpoints.json`) — replaceable data, never hard-coded trust.
 
 - Source: `15-coin-vm-architecture.md` §§2–4;
   `~/workspace/coin-live/DESIGN.md` §2.
-- Grade: DESIGN (packaging and fetch layer are build items W4/W5/W8);
-  the Tier 0 channels the pings ride today (GitHub mirror, IPFS) EXIST.
+- Grade: **W8 BUILT in its single-file form** (Oct 12, 2026) —
+  `coin.py` at this repo's root: one self-contained file carrying the
+  verifier, the kernel fold, and the published chain; run it and it
+  verifies the chain locally and performs the P1 head check against
+  the signed registry's endpoints. The per-platform packaging of
+  §7's table (native binaries, the WASM/browser demo path) and the
+  remaining pings (P2–P5, build items W4/W5) remain DESIGN. The
+  Tier 0 channels the pings ride today (GitHub mirror, IPFS) EXIST.
 
 ## 8. Issuance — the fence
 
