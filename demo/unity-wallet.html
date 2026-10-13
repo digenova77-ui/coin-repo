@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:,">
+<title>DCCP — the only app</title>
+<style>
+:root{
+  --bg:#07080c; --fg:#f3efe6; --muted:#9aa3b2;
+  --teal:#14b8a6; --purple:#a855f7; --gold:#e8c36a; --blue:#2f7bff;
+  --card:rgba(255,255,255,.045); --line:rgba(255,255,255,.12);
+  --radius:1.1rem;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:clamp(1rem,2.6vw+0.85rem,1.12rem); line-height:1.55;
+  min-height:100vh; padding-bottom:4rem;
+}
+.wrap{max-width:34rem; margin:0 auto; padding:0 1rem}
+.center{text-align:center}
+.muted{color:var(--muted)}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.92em; word-break:break-all}
+
+/* ——— honest banner ——— */
+.honest{
+  border:1px solid var(--gold); border-radius:var(--radius);
+  background:rgba(232,195,106,.07); padding:.8rem 1rem; margin:1rem 0;
+  font-size:clamp(.86rem,2.2vw+.72rem,.95rem); text-align:center;
+}
+.honest b{color:var(--gold); letter-spacing:.04em}
+
+/* ——— hero art: the rings, picture first ——— */
+.hero{margin:1.2rem 0 .6rem; border-radius:var(--radius); overflow:hidden; border:1px solid var(--line)}
+.hero svg{display:block; width:100%; height:auto}
+.hero-cap{text-align:center; color:var(--muted); font-size:.9em; padding:.5rem 1rem .8rem}
+
+/* ——— glass sections ——— */
+section.card{
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  padding:1.1rem 1.1rem 1.2rem; margin:1.1rem 0;
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+}
+section.card h2{margin:.1rem 0 .6rem; font-size:clamp(1.15rem,3vw+1rem,1.4rem); text-align:center}
+section.card h3{margin:1rem 0 .4rem; font-size:1.02em; text-align:center; color:var(--teal)}
+.tag{
+  display:inline-block; font-size:.78em; letter-spacing:.06em; text-transform:uppercase;
+  border:1px solid var(--line); border-radius:999px; padding:.15rem .7rem; margin:.15rem;
+  color:var(--muted);
+}
+.tag.demo{color:var(--gold); border-color:var(--gold)}
+.tag.off{color:var(--muted)}
+.tag.law{color:var(--teal); border-color:var(--teal)}
+
+/* ——— the code: QR's digital twin ——— */
+.codebox{
+  background:#0b0e15; border:1px solid var(--line); border-radius:.8rem;
+  padding:.9rem 1rem; margin:.6rem 0; text-align:center;
+}
+.codebox .code{font-size:clamp(.95rem,2.4vw+.8rem,1.08rem); letter-spacing:.02em}
+.codebox .cap{font-size:.82em; color:var(--muted); margin-top:.35rem}
+
+/* ——— buttons ——— */
+.btn{
+  display:inline-block; border:1px solid var(--teal); color:var(--fg); background:rgba(20,184,166,.12);
+  border-radius:999px; padding:.62rem 1.3rem; font-size:1em; cursor:pointer; margin:.3rem .2rem;
+  font-family:inherit; min-height:2.9rem;
+}
+.btn:active{transform:scale(.97)}
+.btn.purple{border-color:var(--purple); background:rgba(168,85,247,.12)}
+.btn.gold{border-color:var(--gold); background:rgba(232,195,106,.1)}
+.btn.ghost{border-color:var(--line); background:transparent; color:var(--muted)}
+.btn.danger{border-color:#e05656; background:rgba(224,86,86,.08); color:#f0a0a0}
+.btn[disabled]{opacity:.45; cursor:not-allowed}
+.btnrow{display:flex; flex-wrap:wrap; justify-content:center; gap:.15rem; margin-top:.5rem}
+
+/* ——— fields ——— */
+.field{margin:.7rem 0}
+.field label{display:block; text-align:center; color:var(--muted); font-size:.9em; margin-bottom:.3rem}
+input[type=text], textarea, select{
+  width:100%; background:#0b0e15; border:1px solid var(--line); border-radius:.7rem;
+  color:var(--fg); padding:.7rem .9rem; font-size:1em; font-family:inherit;
+}
+textarea{min-height:4.5rem; resize:vertical}
+input:focus, textarea:focus, select:focus{outline:2px solid var(--teal); outline-offset:1px}
+
+/* ——— tier chips ——— */
+.tiers{display:flex; gap:.4rem; justify-content:center; flex-wrap:wrap; margin:.6rem 0}
+.tier{
+  border:1px solid var(--line); border-radius:999px; padding:.5rem 1rem; cursor:pointer;
+  font-size:.95em; background:transparent; color:var(--fg); font-family:inherit; min-height:2.7rem;
+}
+.tier small{display:block; font-size:.75em; color:var(--muted)}
+.tier.sel-friend{border-color:var(--teal); background:rgba(20,184,166,.14)}
+.tier.sel-good{border-color:var(--blue); background:rgba(47,123,255,.14)}
+.tier.sel-family{border-color:var(--purple); background:rgba(168,85,247,.16)}
+
+/* ——— contact rows ——— */
+.contact{
+  display:flex; flex-wrap:wrap; align-items:center; gap:.7rem; border:1px solid var(--line);
+  border-radius:.8rem; padding:.7rem .9rem; margin:.5rem 0; background:rgba(255,255,255,.02);
+}
+.contact .nm{font-weight:600}
+.contact > div:first-child{min-width:0}
+.contact .id{overflow-wrap:anywhere}
+.contact .id{font-size:.78em; color:var(--muted)}
+.contact .sp{flex:1}
+.chip{font-size:.72em; border-radius:999px; padding:.18rem .65rem; letter-spacing:.05em; text-transform:uppercase; white-space:nowrap}
+.chip.friend{border:1px solid var(--teal); color:var(--teal)}
+.chip.good-friend{border:1px solid var(--blue); color:#9dbfff}
+.chip.family{border:1px solid var(--purple); color:#cfa6ff}
+
+/* ——— trinity ——— */
+.trinity{display:grid; grid-template-columns:1fr; gap:.7rem; margin:.8rem 0}
+.tri{
+  border:1px solid var(--line); border-radius:.9rem; padding:1rem; text-align:center;
+  background:rgba(255,255,255,.025);
+}
+.tri.efuse{border-color:var(--blue)} .tri.merit{border-color:var(--gold)} .tri.unity{border-color:var(--purple)}
+.tri .role{font-size:.75em; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.tri h3{margin:.25rem 0 .35rem; font-size:1.25em}
+.tri.efuse h3{color:var(--blue)} .tri.merit h3{color:var(--gold)} .tri.unity h3{color:#cfa6ff}
+.bindline{text-align:center; color:var(--muted); font-size:.92em; margin:.4rem 0}
+.bindline b{color:#cfa6ff}
+
+/* ——— rings ——— */
+#ringsvg{width:100%; height:auto; display:block}
+#ringsvg circle[fill]:not([fill="none"]){pointer-events:none}
+.ringbtn{cursor:pointer}
+.ringlbl{fill:var(--fg); font-size:13px; text-anchor:middle; pointer-events:none}
+.ringcnt{fill:var(--muted); font-size:11px; text-anchor:middle; pointer-events:none}
+.crumb{display:flex; gap:.4rem; justify-content:center; flex-wrap:wrap; margin:.5rem 0; font-size:.9em; color:var(--muted)}
+.crumb button{background:none; border:none; color:var(--teal); font-size:1em; cursor:pointer; font-family:inherit; padding:.2rem .4rem}
+
+/* ——— definition list ——— */
+dl.def{margin:.6rem 0; font-size:.95em}
+dl.def dt{color:var(--teal); margin-top:.7rem; font-weight:600; text-align:center}
+dl.def dd{margin:.25rem 0 0; text-align:center; color:var(--fg)}
+ol.steps{padding-left:1.3rem; margin:.5rem 0}
+ol.steps li{margin:.45rem 0}
+
+/* ——— ledger ——— */
+.entry{border:1px solid var(--line); border-radius:.8rem; padding:.7rem .9rem; margin:.5rem 0; background:rgba(255,255,255,.02)}
+.entry .eh{display:flex; justify-content:space-between; gap:.5rem; flex-wrap:wrap; font-size:.82em; color:var(--muted)}
+.entry .eb{margin:.45rem 0; overflow-wrap:anywhere}
+.entry .efoot{font-size:.74em; color:var(--muted)}
+
+/* ——— toast ——— */
+#toast{
+  position:fixed; left:50%; bottom:2rem; transform:translateX(-50%) translateY(1rem);
+  background:#101623; border:1px solid var(--teal); color:var(--fg); border-radius:999px;
+  padding:.7rem 1.4rem; opacity:0; pointer-events:none; transition:opacity .25s, transform .25s;
+  z-index:50; max-width:90vw; text-align:center; font-size:.95em;
+}
+#toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+
+.verdict{font-size:.82em; color:var(--muted); text-align:center; margin-top:2rem}
+.quote{border-left:3px solid var(--purple); padding:.4rem 0 .4rem .9rem; margin:.8rem 0; font-style:italic; color:#d9ccf5}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important; transition:none !important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="honest"><b>DESIGN SHOWN — NOT ACTIVE YET.</b><br>
+No coin implementation exists. Nothing here moves money. The wallet is the shell the economy will inhabit.</div>
+
+<!-- ══════════ HERO: the rings, picture first ══════════ -->
+<div class="hero">
+<svg viewBox="0 0 400 240" role="img" aria-label="Concentric rings of rings">
+  <defs>
+    <radialGradient id="core" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#d6fff8"/><stop offset="55%" stop-color="#14b8a6"/><stop offset="100%" stop-color="#0b3b36"/>
+    </radialGradient>
+    <radialGradient id="void" cx="50%" cy="42%" r="75%">
+      <stop offset="0%" stop-color="#141428"/><stop offset="60%" stop-color="#0a0a14"/><stop offset="100%" stop-color="#07080c"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="240" fill="url(#void)"/>
+  <g fill="none" stroke-linecap="round" opacity=".9">
+    <circle cx="200" cy="120" r="100" stroke="#a855f7" stroke-width="2" opacity=".35"/>
+    <circle cx="200" cy="120" r="100" stroke="#a855f7" stroke-width="6" opacity=".12"/>
+    <circle cx="200" cy="120" r="78" stroke="#2f7bff" stroke-width="2" opacity=".4"/>
+    <circle cx="200" cy="120" r="78" stroke="#2f7bff" stroke-width="5" opacity=".12"/>
+    <circle cx="200" cy="120" r="56" stroke="#14b8a6" stroke-width="2" opacity=".5"/>
+    <circle cx="200" cy="120" r="56" stroke="#14b8a6" stroke-width="5" opacity=".12"/>
+    <circle cx="200" cy="120" r="36" stroke="#e8c36a" stroke-width="2" opacity=".55"/>
+    <circle cx="200" cy="120" r="36" stroke="#e8c36a" stroke-width="4" opacity=".14"/>
+  </g>
+  <circle cx="200" cy="120" r="17" fill="url(#core)"/>
+  <circle cx="200" cy="120" r="17" fill="none" stroke="#d6fff8" stroke-width="1" opacity=".5"/>
+</svg>
+<div class="hero-cap">Rings of rings of rings — your people, your tiers, your call.</div>
+</div>
+
+<h1 class="center" style="margin:.4rem 0 .1rem">DCCP</h1>
+<p class="center muted" style="margin-top:0">The only app. Your ID, your ledger, your people, your rings.</p>
+
+<!-- ══════════ 1. UNITY ID SURFACE ══════════ -->
+<section class="card" id="sec-id">
+<h2>Your Unity ID</h2>
+<div class="center"><span class="tag demo">Local demo — not sealed</span></div>
+<p class="center muted" style="font-size:.9em">The bind-then-validate ceremony runs on your device. Until then, this is a local demo identity — real format, real derivation, no ceremony behind it.</p>
+
+<div class="codebox">
+  <div class="code mono" id="uid-full" style="font-size:.9em">…</div>
+  <div class="cap">Unity ID — the member. Click to copy.</div>
+  <div class="btnrow">
+    <button class="btn" id="btn-copy-uid">Copy Unity ID</button>
+    <button class="btn ghost" id="btn-share-uid">Send…</button>
+  </div>
+</div>
+
+<div class="codebox">
+  <div class="code mono" id="addr-full" style="font-size:.9em">…</div>
+  <div class="cap">Coin address — bound to the ID above. This is the address eFuse would move on.</div>
+  <div class="btnrow">
+    <button class="btn purple" id="btn-copy-addr">Copy coin address</button>
+    <button class="btn ghost" id="btn-share-addr">Send…</button>
+  </div>
+</div>
+
+<div class="center">
+  <button class="btn gold" id="btn-verify">Verify the binding</button>
+  <p class="muted" id="verify-out" style="font-size:.9em; min-height:1.6em"></p>
+</div>
+<p class="center muted" style="font-size:.85em">On mobile you can't photograph your own screen — so the QR has a digital twin: the code itself. Copy it, send it, paste it. That's the whole story.</p>
+</section>
+
+<!-- ══════════ 2. THE LEDGER ══════════ -->
+<section class="card" id="sec-ledger">
+<h2>The Ledger</h2>
+<div class="center"><span class="tag law">Write-only</span> <span class="tag demo">Local — not sealed</span></div>
+<p class="center muted" style="font-size:.9em">Append-only. You write; history doesn't rewrite. The same claim twice is one entry — <b>once is once.</b> Every entry is hash-chained to the one before it. This ledger lives on your device — nothing is transmitted, nothing leaves.</p>
+<div class="field"><label>Kind of entry</label>
+  <div class="tiers" id="ledger-kind">
+    <button class="tier sel-friend" data-kind="note">Note<small>a word for the record</small></button>
+    <button class="tier" data-kind="claim">Claim<small>something you state</small></button>
+    <button class="tier" data-kind="record">Record<small>work done, witnessed</small></button>
+  </div>
+</div>
+<div class="field"><label for="ledger-input">Write it</label><textarea id="ledger-input" placeholder="e.g. Delivered the morning route — all stops, no misses"></textarea></div>
+<div class="btnrow">
+  <button class="btn" id="btn-write">Write to the ledger</button>
+  <button class="btn ghost" id="btn-verify-ledger">Verify the chain</button>
+</div>
+<p class="center muted" id="ledger-verify-out" style="font-size:.9em; min-height:1.6em"></p>
+<h3>Entries · <span id="ledger-count">empty</span></h3>
+<div id="ledger-entries"></div>
+<p class="center muted" id="no-entries" style="font-size:.9em">Nothing written yet. The first entry chains to genesis.</p>
+<div class="btnrow"><button class="btn ghost" id="btn-copy-ledger">Copy ledger (JSON)</button></div>
+</section>
+
+<!-- ══════════ 3. RECEIVE ══════════ -->
+<section class="card" id="sec-receive">
+<h2>Receive — someone else's code</h2>
+<p class="center muted" style="font-size:.9em">Paste a Unity ID or coin address. It gets validated — format, alphabet, checksum — with the true reason if it fails.</p>
+<div class="field">
+  <label for="recv-input">Paste their code</label>
+  <input type="text" id="recv-input" class="mono" placeholder="u1… or e1…" autocomplete="off" spellcheck="false">
+</div>
+<div class="btnrow"><button class="btn" id="btn-validate">Validate</button></div>
+<div id="recv-out" style="margin-top:.6rem"></div>
+<div id="recv-add" style="display:none">
+  <div class="field"><label for="recv-name">Their name</label><input type="text" id="recv-name" placeholder="e.g. Dom" autocomplete="off"></div>
+  <div class="field"><label>Set their tier — you set it, the system enforces exactly what you set</label>
+    <div class="tiers" id="recv-tiers">
+      <button class="tier" data-tier="friend">Friend<small>a little access</small></button>
+      <button class="tier" data-tier="good-friend">Good friend<small>more access</small></button>
+      <button class="tier" data-tier="family">Family<small>total access · kin-bound</small></button>
+    </div>
+  </div>
+  <div class="btnrow"><button class="btn purple" id="btn-add-contact">Add to my people</button></div>
+</div>
+</section>
+
+<!-- ══════════ 4. PEOPLE & TIERS ══════════ -->
+<section class="card" id="sec-people">
+<h2>My people</h2>
+<p class="center muted" style="font-size:.9em">For a friend — a little access. For a good friend — more. For family — total. <b>Kin is binding.</b></p>
+<div id="contacts"></div>
+<p class="center muted" id="no-contacts" style="font-size:.9em">Nobody here yet. Paste a code above to add someone.</p>
+<h3>What each tier means</h3>
+<div class="center" style="font-size:.92em">
+  <div><span class="chip friend">friend</span> — a little access: what you choose to share, nothing more.</div>
+  <div style="margin-top:.4rem"><span class="chip good-friend">good friend</span> — more access: deeper sharing, your call.</div>
+  <div style="margin-top:.4rem"><span class="chip family">family</span> — total access: kin-bound. Kin is the binding.</div>
+</div>
+</section>
+
+<!-- ══════════ 5. SHARE ══════════ -->
+<section class="card" id="sec-share">
+<h2>Share</h2>
+<p class="center muted" style="font-size:.9em">Money or information — same rails. Faucet payments, receiving funds, or just sharing information.</p>
+<div class="field"><label for="share-who">Share with</label><select id="share-who"></select></div>
+<div id="share-tier-note" class="center" style="font-size:.9em; min-height:1.6em"></div>
+<div class="field"><label>What flows</label>
+  <div class="tiers" id="share-kind">
+    <button class="tier" data-kind="info">Information<small>hockey, notes, anything</small></button>
+    <button class="tier" data-kind="funds">Funds<small>eFuse</small></button>
+  </div>
+</div>
+<div id="share-info-box" style="display:none">
+  <div class="field"><label for="share-text">Your message</label><textarea id="share-text" placeholder="e.g. Dom's game is Saturday at 2 — rink 3"></textarea></div>
+  <div class="btnrow">
+    <button class="btn" id="btn-copy-share">Copy share note</button>
+    <button class="btn ghost" id="btn-send-share">Send…</button>
+  </div>
+  <p class="center muted" style="font-size:.82em">The note is composed on your device. Nothing is transmitted by this wallet.</p>
+</div>
+<div id="share-funds-box" style="display:none">
+  <div class="honest"><b>NOT ACTIVE YET — DESIGN SHOWN.</b><br>eFuse movement is designed, not built. No coin implementation exists. Nobody ever buys or sells that coin.</div>
+</div>
+</section>
+
+<!-- ══════════ 6. RINGS ══════════ -->
+<section class="card" id="sec-rings">
+<h2>Rings of rings of rings</h2>
+<p class="center muted" style="font-size:.9em">Every ring contains rings. Tap a ring to go deeper — all the way in, all the way back out.</p>
+<div class="crumb" id="ring-crumb"></div>
+<svg id="ringsvg" viewBox="0 0 360 360" role="img" aria-label="Trust rings"></svg>
+<p class="center muted" style="font-size:.85em" id="ring-note">Each ring is your tiering — set by you, shown by the wallet. Tap a ring to go deeper.</p>
+</section>
+
+<!-- ══════════ 7. TRINITY ══════════ -->
+<section class="card" id="sec-trinity">
+<h2>The trinity</h2>
+<div class="trinity">
+  <div class="tri efuse">
+    <div class="role">the medium</div><h3>eFuse</h3>
+    <p style="font-size:.9em">The currency that moves. The signature — <i>you don't trade signatures, you give them.</i></p>
+    <p class="mono" style="font-size:.8em" id="tri-addr">…</p>
+    <div><span class="tag off">Not active yet — design shown</span></div>
+  </div>
+  <div class="bindline">↑&nbsp; <b>bound together by Unity</b> &nbsp;↓</div>
+  <div class="tri unity">
+    <div class="role">the member · the binding</div><h3>Unity</h3>
+    <p style="font-size:.9em">Identity. The protocol. Kin-binding. Every eFuse movement and every Merit accrual is bound to a Unity ID — <b>no anonymous flows.</b></p>
+    <div><span class="tag law">Binding law</span></div>
+  </div>
+  <div class="bindline">↑&nbsp; <b>bound together by Unity</b> &nbsp;↓</div>
+  <div class="tri merit">
+    <div class="role">the measure</div><h3>Merit</h3>
+    <p style="font-size:.9em">Protocol-fidelity. <i>Merit wins the work.</i> Identity earns merit; merit moves money.</p>
+    <div><span class="tag off">Not active yet — design shown</span></div>
+  </div>
+</div>
+<div class="quote">"Nobody ever buys or sells that coin but they can donate to a locked black hole I guess if they want to it's not really a black hole it goes to the core cause so anybody in the Fiat world can do this if they choose and it would be a donation to the world and everybody and everything on it and to the cosmos to try and lock in our own version of Eden."</div>
+<div class="center"><span class="tag off">No balances shown — there is nothing to balance yet</span></div>
+</section>
+
+<!-- ══════════ 8. COIN ADDRESS SCHEME (defined) ══════════ -->
+<section class="card" id="sec-scheme">
+<h2>Coin addresses — defined</h2>
+<div class="center"><span class="tag law">Approved definition — unactivated</span></div>
+<p class="center muted" style="font-size:.9em">Approved by David, October 4, 2026. Not yet activated — the definition is sealed, the chain is not.</p>
+<p class="center muted" style="font-size:.9em">Derived from the architecture's own conventions — SHA-256, domain separators, base32. No imported formats.</p>
+<dl class="def">
+  <dt>Format</dt>
+  <dd class="mono">u1 · 28 payload chars · 4 checksum chars<br>e1 · 28 payload chars · 4 checksum chars</dd>
+  <dt>Alphabet</dt><dd class="mono">a–z, 2–7 (lowercase base32, no padding)</dd>
+</dl>
+<h3>Derivation</h3>
+<ol class="steps">
+  <li><b>Unity ID:</b> <span class="mono">u1 ‖ base32( SHA-256("dualis.unity-id.v1" ‖ device_pubkey) )[0:28] ‖ checksum</span> — from the bind ceremony's device key.</li>
+  <li><b>Coin address:</b> <span class="mono">e1 ‖ base32( SHA-256("dualis.efuse.addr.v1" ‖ unity_id_payload) )[0:28] ‖ checksum</span> — derived <i>from</i> the Unity ID. The binding is recomputable by anyone holding the ID: <b>shown, not claimed.</b></li>
+  <li><b>Checksum:</b> <span class="mono">base32( SHA-256("dualis.check.v1" ‖ payload) )[0:4]</span> — catches a wrong character on paste.</li>
+</ol>
+<h3>Validation</h3>
+<p class="center" style="font-size:.92em">Prefix <span class="mono">u1</span>/<span class="mono">e1</span> → 32 base32 chars → checksum recomputed. Fail any step and the true reason is stated — never a silent accept.</p>
+<h3>The locked address — the core cause</h3>
+<p class="center muted" style="font-size:.9em">Scheme-level constant. Nothing up the sleeve — recompute <span class="mono">SHA-256("dualis.efuse.lock.v1:core-cause")</span> and check it yourself. One way in (donations); directed out only to cause-work. Not really a black hole — it goes to the core cause.</p>
+<div class="codebox">
+  <div class="code mono" id="lock-full" style="font-size:.9em">…</div>
+  <div class="cap">Core Cause Lock — the donation address</div>
+  <div class="btnrow"><button class="btn gold" id="btn-copy-lock">Copy lock address</button></div>
+</div>
+<div class="center"><span class="tag law">Approved, unactivated — no chain behind these yet</span></div>
+</section>
+
+<!-- ══════════ 9. YOUR DATA ══════════ -->
+<section class="card" id="sec-data">
+<h2>Your data</h2>
+<p class="center" style="font-size:.92em">Everything here lives only in this browser, on this device. Nothing is transmitted anywhere. You can opt out anytime — one tap, everything gone.</p>
+<div class="btnrow"><button class="btn danger" id="btn-wipe">Wipe my wallet</button></div>
+</section>
+
+<div class="verdict">ED-BUILD-20261004-DCCP-LEDGER-V1 · origin predicted · design only</div>
+<p class="center muted" style="font-size:.9em; max-width:30rem; margin:1rem auto 0">The kept imperfection: a valid checksum proves the code was copied right — not that it's the right person. The wallet checks the code; only you can check the human. Held by togetherness.</p>
+</div>
+<div id="toast" role="status"></div>
+
+<script>
+"use strict";
+/* ═══ DCCP — ED-BUILD-20261004-WALLET-V3, origin predicted ═══
+   The coin address scheme, implemented live. Every address shown on this
+   page is derived by the code below — the binding is computed, not claimed. */
+
+/* ——— SHA-256 (pure JS, verified against test vectors) ——— */
+function sha256Bytes(msg){
+  var K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+  var l=msg.length, bitLen=l*8, withOne=l+1;
+  var padLen=(64-((withOne+8)%64))%64, total=withOne+padLen+8;
+  var b=new Uint8Array(total); b.set(msg); b[l]=0x80;
+  var dv=new DataView(b.buffer);
+  dv.setUint32(total-8, Math.floor(bitLen/4294967296)); dv.setUint32(total-4, bitLen>>>0);
+  var H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  var w=new Uint32Array(64);
+  function rotr(x,n){return (x>>>n)|(x<<(32-n));}
+  for(var off=0;off<total;off+=64){
+    for(var i=0;i<16;i++) w[i]=dv.getUint32(off+i*4);
+    for(i=16;i<64;i++){ var s0=rotr(w[i-15],7)^rotr(w[i-15],18)^(w[i-15]>>>3); var s1=rotr(w[i-2],17)^rotr(w[i-2],19)^(w[i-2]>>>10); w[i]=(w[i-16]+s0+w[i-7]+s1)|0; }
+    var a=H[0],bb=H[1],c=H[2],d=H[3],e=H[4],f=H[5],g=H[6],h=H[7];
+    for(i=0;i<64;i++){ var S1=rotr(e,6)^rotr(e,11)^rotr(e,25); var ch=(e&f)^(~e&g); var t1=(h+S1+ch+K[i]+w[i])|0; var S0=rotr(a,2)^rotr(a,13)^rotr(a,22); var maj=(a&bb)^(a&c)^(bb&c); var t2=(S0+maj)|0; h=g;g=f;f=e;e=(d+t1)|0;d=c;c=bb;bb=a;a=(t1+t2)|0; }
+    H[0]=(H[0]+a)|0;H[1]=(H[1]+bb)|0;H[2]=(H[2]+c)|0;H[3]=(H[3]+d)|0;H[4]=(H[4]+e)|0;H[5]=(H[5]+f)|0;H[6]=(H[6]+g)|0;H[7]=(H[7]+h)|0;
+  }
+  var out=new Uint8Array(32), odv=new DataView(out.buffer);
+  for(var j=0;j<8;j++) odv.setUint32(j*4,H[j]>>>0);
+  return out;
+}
+var B32A="abcdefghijklmnopqrstuvwxyz234567";
+function b32(bytes){ var out="",bits=0,val=0;
+  for(var i=0;i<bytes.length;i++){ val=(val<<8)|bytes[i]; bits+=8;
+    while(bits>=5){ bits-=5; out+=B32A[(val>>>bits)&31]; } }
+  if(bits>0) out+=B32A[(val<<(5-bits))&31];
+  return out; }
+function te(s){ return new TextEncoder().encode(s); }
+function cat(){ var n=0,i,a=arguments; for(i=0;i<a.length;i++) n+=a[i].length;
+  var o=new Uint8Array(n),p=0; for(i=0;i<a.length;i++){ o.set(a[i],p); p+=a[i].length; } return o; }
+var Hraw=function(parts){ return sha256Bytes(cat.apply(null,parts)); };
+
+/* ——— the scheme (APPROVED by David, 2026-10-04 — unactivated) ——— */
+var D_UID="dualis.unity-id.v1", D_ADDR="dualis.efuse.addr.v1",
+    D_CHK="dualis.check.v1", D_LOCK="dualis.efuse.lock.v1:core-cause";
+function payload28(domainBytes){ return b32(Hraw([domainBytes])).slice(0,28); }
+function checksum28(p){ return b32(Hraw([te(D_CHK+p)])).slice(0,4); }
+function deriveUnityId(pubkeyBytes){
+  var p=payload28(cat(te(D_UID),pubkeyBytes)); return "u1"+p+checksum28(p); }
+function deriveCoinAddress(unityId){
+  var p=b32(Hraw([te(D_ADDR+unityId.slice(2,30))])).slice(0,28); return "e1"+p+checksum28(p); }
+function lockedAddress(){
+  var p=b32(Hraw([te(D_LOCK)])).slice(0,28); return "e1"+p+checksum28(p); }
+function validateIdentifier(s){
+  if(typeof s!=="string"||!s.trim()) return {valid:false,reason:"empty — paste a code first"};
+  s=s.trim().toLowerCase();
+  var m=/^([ue])1([a-z2-7]{32})$/.exec(s);
+  if(!m) return {valid:false,reason:"must be u1 or e1 followed by 32 base32 chars (a–z, 2–7)"};
+  var p=s.slice(2,30);
+  if(checksum28(p)!==s.slice(30)) return {valid:false,reason:"checksum mismatch — a character is wrong; re-copy the code"};
+  var kind=m[1]==="u"?"unity-id":"coin-address";
+  if(s===lockedAddress()) kind="core-cause lock";
+  return {valid:true,kind:kind,value:s};
+}
+function verifyBinding(unityId,coinAddr){
+  var v=validateIdentifier(unityId);
+  if(!v.valid||v.kind!=="unity-id") return {ok:false,reason:"the Unity ID itself is invalid: "+v.reason};
+  var recomputed=deriveCoinAddress(unityId);
+  if(recomputed===coinAddr) return {ok:true};
+  return {ok:false,reason:"recomputed address differs — this pair is not bound"};
+}
+
+/* ——— helpers ——— */
+function $(id){ return document.getElementById(id); }
+var toastT=null;
+function toast(msg){ var t=$("toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toastT); toastT=setTimeout(function(){t.classList.remove("show");},2200); }
+function copyText(s,what){
+  function done(){ toast((what||"Copied")+" ✓"); }
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(s).then(done,function(){ fallback(); });
+  } else fallback();
+  function fallback(){ var ta=document.createElement("textarea"); ta.value=s; ta.style.position="fixed"; ta.style.opacity="0";
+    document.body.appendChild(ta); ta.select(); try{document.execCommand("copy");done();}catch(e){toast("Copy failed — long-press the code");} ta.remove(); }
+}
+function shareText(title,text){
+  if(navigator.share){ navigator.share({title:title,text:text}).catch(function(){}); }
+  else copyText(text,"Code copied — paste it anywhere");
+}
+function short(s){ return s.length>18 ? s.slice(0,10)+"…"+s.slice(-6) : s; }
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+
+/* ——— demo identity (LOCAL — not a ceremony) ——— */
+function getDemo(){
+  var raw=localStorage.getItem("uw.demo");
+  if(!raw){ var b=new Uint8Array(32); crypto.getRandomValues(b);
+    raw=Array.prototype.map.call(b,function(x){return x.toString(16).padStart(2,"0");}).join("");
+    localStorage.setItem("uw.demo",raw); }
+  var bytes=new Uint8Array(raw.match(/../g).map(function(h){return parseInt(h,16);}));
+  var uid=deriveUnityId(bytes), addr=deriveCoinAddress(uid);
+  return {uid:uid,addr:addr};
+}
+var DEMO=getDemo();
+
+/* ——— ID surface ——— */
+$("uid-full").textContent=DEMO.uid;
+$("addr-full").textContent=DEMO.addr;
+$("tri-addr").textContent="eFuse would move on "+short(DEMO.addr);
+$("lock-full").textContent=lockedAddress();
+$("btn-copy-uid").onclick=function(){ copyText(DEMO.uid,"Unity ID copied"); };
+$("btn-copy-addr").onclick=function(){ copyText(DEMO.addr,"Coin address copied"); };
+$("btn-copy-lock").onclick=function(){ copyText(lockedAddress(),"Lock address copied"); };
+$("btn-share-uid").onclick=function(){ shareText("My Unity ID","My Unity ID: "+DEMO.uid); };
+$("btn-share-addr").onclick=function(){ shareText("My coin address","My eFuse coin address: "+DEMO.addr); };
+$("btn-verify").onclick=function(){
+  var r=verifyBinding(DEMO.uid,DEMO.addr);
+  $("verify-out").innerHTML=r.ok
+    ? '<b style="color:var(--teal)">BOUND ✓</b> — address recomputed from the ID, byte-for-byte match.'
+    : '<b style="color:#e05656">NOT BOUND</b> — '+esc(r.reason);
+};
+
+/* ——— the ledger: write-only, append-only ——— */
+function hex(bytes){ var out="",i; for(i=0;i<bytes.length;i++) out+=bytes[i].toString(16).padStart(2,"0"); return out; }
+var GENESIS=hex(Hraw([te("dccp.ledger.genesis.v1")]));
+var LS_LEDGER="dccp.ledger";
+function getLedger(){ try{ var l=JSON.parse(localStorage.getItem(LS_LEDGER)||"[]"); return Array.isArray(l)?l:[]; }catch(e){ return []; } }
+function setLedger(l){ localStorage.setItem(LS_LEDGER,JSON.stringify(l)); }
+function claimKey(e){ return e.author+"|"+e.kind+"|"+e.body; }
+function entryHash(e){ return hex(Hraw([te([e.seq,e.ts,e.author,e.kind,e.body,e.prev].join("|"))])); }
+function writeEntry(kind,body){
+  body=(body||"").trim(); if(!body){ toast("Write something first"); return null; }
+  var l=getLedger();
+  var prev=l.length?l[l.length-1].hash:GENESIS;
+  var e={seq:l.length+1,ts:new Date().toISOString(),author:DEMO.uid,kind:kind,body:body,prev:prev};
+  e.hash=entryHash(e);
+  var k=claimKey(e);
+  if(l.some(function(x){return claimKey(x)===k;})){ toast("Already in the ledger — once is once"); return null; }
+  l.push(e); setLedger(l); renderLedger();
+  toast("Written — entry #"+e.seq+" ✓");
+  return e;
+}
+function verifyLedger(){
+  var l=getLedger(), prev=GENESIS;
+  for(var i=0;i<l.length;i++){ var e=l[i];
+    if(e.prev!==prev) return {ok:false,reason:"prev-link broken at entry #"+e.seq};
+    if(entryHash(e)!==e.hash) return {ok:false,reason:"hash mismatch at entry #"+e.seq+" — content changed after writing"};
+    prev=e.hash; }
+  return {ok:true,count:l.length};
+}
+function renderLedger(){
+  var l=getLedger(), box=$("ledger-entries");
+  $("ledger-count").textContent=l.length?l.length+" "+(l.length===1?"entry":"entries"):"empty";
+  $("no-entries").style.display=l.length?"none":"block";
+  box.innerHTML="";
+  l.forEach(function(e){
+    var d=document.createElement("div"); d.className="entry";
+    d.innerHTML='<div class="eh"><span><b>#'+e.seq+'</b> · '+esc(e.kind)+'</span><span class="mono">'+esc(e.ts.slice(0,19).replace("T"," "))+'</span></div>'
+      +'<div class="eb">'+esc(e.body)+'</div>'
+      +'<div class="efoot mono">hash '+esc(e.hash.slice(0,16))+'… · prev '+esc(e.prev.slice(0,16))+'…</div>';
+    box.appendChild(d);
+  });
+}
+var ledgerKind="note";
+$("ledger-kind").addEventListener("click",function(e){
+  var b=e.target.closest(".tier"); if(!b) return; ledgerKind=b.dataset.kind;
+  var bs=$("ledger-kind").querySelectorAll(".tier");
+  for(var i=0;i<bs.length;i++) bs[i].className="tier"+(bs[i]===b?" sel-friend":""); });
+$("btn-write").onclick=function(){
+  var e=writeEntry(ledgerKind,$("ledger-input").value);
+  if(e) $("ledger-input").value="";
+};
+$("btn-verify-ledger").onclick=function(){
+  var r=verifyLedger();
+  $("ledger-verify-out").innerHTML=r.ok
+    ? '<b style="color:var(--teal)">CHAIN INTACT ✓</b> — '+r.count+' '+(r.count===1?"entry":"entries")+', every link holds, genesis to tip.'
+    : '<b style="color:#e05656">CHAIN BROKEN</b> — '+esc(r.reason);
+};
+$("btn-copy-ledger").onclick=function(){
+  var l=getLedger();
+  if(!l.length){ toast("Nothing written yet"); return; }
+  copyText(JSON.stringify(l,null,2),"Ledger copied");
+};
+renderLedger();
+
+/* ——— receive flow ——— */
+var recvTier="friend", recvValid=null;
+function paintTiers(el,tier){ var bs=el.querySelectorAll(".tier");
+  for(var i=0;i<bs.length;i++){ var b=bs[i];
+    b.className="tier"+(b.dataset.tier===tier?" sel-"+b.dataset.tier:""); } }
+paintTiers($("recv-tiers"),recvTier);
+$("recv-tiers").addEventListener("click",function(e){
+  var b=e.target.closest(".tier"); if(!b) return;
+  recvTier=b.dataset.tier; paintTiers($("recv-tiers"),recvTier); });
+$("btn-validate").onclick=function(){
+  var r=validateIdentifier($("recv-input").value), out=$("recv-out");
+  recvValid=null; $("recv-add").style.display="none";
+  if(!r.valid){ out.innerHTML='<div class="honest"><b>INVALID.</b><br>'+esc(r.reason)+'</div>'; return; }
+  recvValid=r;
+  out.innerHTML='<div class="codebox"><div class="code mono" style="font-size:.85em">'+esc(r.value)+'</div>'
+    +'<div class="cap"><b style="color:var(--teal)">VALID ✓</b> — '+(r.kind==="core-cause lock"
+      ? 'this is the <b>Core Cause Lock</b> — the donation address. Donations go to the core cause.'
+      : 'kind: <b>'+esc(r.kind)+'</b> — checksum good, alphabet good, prefix good.')+'</div></div>';
+  if(r.kind!=="core-cause lock") $("recv-add").style.display="block";
+};
+function getContacts(){ try{ return JSON.parse(localStorage.getItem("uw.contacts")||"[]"); }catch(e){ return []; } }
+function setContacts(c){ localStorage.setItem("uw.contacts",JSON.stringify(c)); }
+$("btn-add-contact").onclick=function(){
+  if(!recvValid) return;
+  var name=$("recv-name").value.trim()||"Unnamed";
+  var cs=getContacts();
+  if(cs.some(function(c){return c.value===recvValid.value;})){ toast("Already in your people"); return; }
+  cs.push({name:name,value:recvValid.value,kind:recvValid.kind,tier:recvTier,added:Date.now()});
+  setContacts(cs);
+  $("recv-input").value=""; $("recv-name").value=""; $("recv-out").innerHTML=""; $("recv-add").style.display="none";
+  renderContacts(); renderShareWho(); drawRings();
+  toast(name+" added as "+recvTier.replace("-"," "));
+};
+
+/* ——— people & tiers ——— */
+var TIER_LABEL={friend:"friend", "good-friend":"good friend", family:"family"};
+var TIER_ACCESS={friend:"a little access", "good-friend":"more access", family:"total access · kin-bound"};
+function renderContacts(){
+  var cs=getContacts(), box=$("contacts");
+  $("no-contacts").style.display=cs.length?"none":"block";
+  box.innerHTML="";
+  cs.forEach(function(c,i){
+    var d=document.createElement("div"); d.className="contact";
+    d.innerHTML='<div><div class="nm">'+esc(c.name)+'</div><div class="id mono">'+esc(short(c.value))+' · '+esc(c.kind)+'</div></div>'
+      +'<div class="sp"></div><span class="chip '+c.tier+'">'+esc(TIER_LABEL[c.tier])+'</span>';
+    var chg=document.createElement("button"); chg.className="btn ghost"; chg.style.fontSize=".8em"; chg.textContent="Tier";
+    chg.onclick=function(){ cycleTier(i); };
+    var del=document.createElement("button"); del.className="btn ghost"; del.style.fontSize=".8em"; del.textContent="✕";
+    del.setAttribute("aria-label","Remove "+c.name);
+    del.onclick=function(){ var cc=getContacts(); cc.splice(i,1); setContacts(cc); renderContacts(); renderShareWho(); drawRings(); toast("Removed"); };
+    d.appendChild(chg); d.appendChild(del); box.appendChild(d);
+  });
+}
+function cycleTier(i){
+  var order=["friend","good-friend","family"], cs=getContacts();
+  cs[i].tier=order[(order.indexOf(cs[i].tier)+1)%order.length];
+  setContacts(cs); renderContacts(); renderShareWho(); drawRings();
+  toast(cs[i].name+" → "+TIER_LABEL[cs[i].tier]+" ("+TIER_ACCESS[cs[i].tier]+")");
+}
+renderContacts();
+
+/* ——— share composer ——— */
+var shareKind="info";
+function renderShareWho(){
+  var cs=getContacts(), sel=$("share-who"); sel.innerHTML="";
+  if(!cs.length){ var o=document.createElement("option"); o.textContent="— no people yet —"; sel.appendChild(o); }
+  cs.forEach(function(c){ var o=document.createElement("option"); o.value=c.value; o.textContent=c.name+" ("+TIER_LABEL[c.tier]+")"; sel.appendChild(o); });
+  paintShareTier();
+}
+function paintShareTier(){
+  var cs=getContacts(), v=$("share-who").value, c=null;
+  for(var i=0;i<cs.length;i++) if(cs[i].value===v) c=cs[i];
+  $("share-tier-note").innerHTML=c
+    ? 'Sharing with <b>'+esc(c.name)+'</b> — tier <span class="chip '+c.tier+'">'+esc(TIER_LABEL[c.tier])+'</span> → '+esc(TIER_ACCESS[c.tier])
+    : '<span class="muted">Add someone above to share with them.</span>';
+}
+$("share-who").addEventListener("change",paintShareTier);
+(function(){ var bs=$("share-kind").querySelectorAll(".tier");
+  for(var i=0;i<bs.length;i++) if(bs[i].dataset.kind==="info") bs[i].className="tier sel-friend";
+  $("share-info-box").style.display="block"; })();
+$("share-kind").addEventListener("click",function(e){
+  var b=e.target.closest(".tier"); if(!b) return;
+  shareKind=b.dataset.kind;
+  var bs=$("share-kind").querySelectorAll(".tier");
+  for(var i=0;i<bs.length;i++) bs[i].className="tier"+(bs[i]===b?" sel-friend":"");
+  $("share-info-box").style.display=shareKind==="info"?"block":"none";
+  $("share-funds-box").style.display=shareKind==="funds"?"block":"none";
+});
+function shareNoteText(){
+  var cs=getContacts(), v=$("share-who").value, c=null;
+  for(var i=0;i<cs.length;i++) if(cs[i].value===v) c=cs[i];
+  return "Shared via Unity ("+(c?TIER_LABEL[c.tier]:"no one")+" tier)"
+    + "\nFrom: "+DEMO.uid
+    + (c?"\nTo: "+c.name+" <"+c.value+">":"")
+    + "\n—\n"+$("share-text").value.trim()
+    + "\n—\nNot a transaction. Composed on-device.";
+}
+$("btn-copy-share").onclick=function(){
+  if(!$("share-text").value.trim()){ toast("Write the note first"); return; }
+  copyText(shareNoteText(),"Share note copied");
+};
+$("btn-send-share").onclick=function(){
+  if(!$("share-text").value.trim()){ toast("Write the note first"); return; }
+  shareText("Unity share",shareNoteText());
+};
+renderShareWho();
+
+/* ——— rings of rings of rings ——— */
+var ringPath=["You"];
+function ringModel(){
+  var cs=getContacts();
+  var tiers={"family":[],"good-friend":[],"friend":[]};
+  cs.forEach(function(c){ (tiers[c.tier]||tiers.friend).push(c); });
+  return [
+    {name:"You",color:"#14b8a6",members:[],sub:null},
+    {name:"Family · kin-bound",color:"#a855f7",members:tiers.family,sub:"family"},
+    {name:"Good friends",color:"#2f7bff",members:tiers["good-friend"],sub:"good-friend"},
+    {name:"Friends",color:"#14b8a6",members:tiers.friend,sub:"friend"},
+    {name:"World",color:"#9aa3b2",members:[],sub:"world"}
+  ];
+}
+function drawRings(){
+  var svg=$("ringsvg"), NS="http://www.w3.org/2000/svg"; svg.innerHTML="";
+  var cx=180,cy=180;
+  var crumb=$("ring-crumb"); crumb.innerHTML="";
+  ringPath.forEach(function(p,i){
+    var b=document.createElement("button"); b.textContent=p.name||p;
+    b.onclick=function(){ ringPath=ringPath.slice(0,i+1); drawRings(); };
+    crumb.appendChild(b);
+    if(i<ringPath.length-1){ var s=document.createElement("span"); s.textContent="›"; crumb.appendChild(s); }
+  });
+  var level=ringPath[ringPath.length-1];
+  if(typeof level==="string"&&level==="You"){
+    var rings=ringModel(), r0=34;
+    rings.forEach(function(rg,i){
+      var r=r0+i*30;
+      var c=document.createElementNS(NS,"circle");
+      c.setAttribute("cx",cx); c.setAttribute("cy",cy); c.setAttribute("r",r);
+      c.setAttribute("fill","none"); c.setAttribute("stroke",rg.color);
+      c.setAttribute("stroke-width",i===0?3:1.6); c.setAttribute("opacity",i===0?0.95:0.55);
+      c.setAttribute("class","ringbtn");
+      c.addEventListener("click",function(){ ringPath.push(rg); drawRings(); });
+      svg.appendChild(c);
+      if(i>0){
+        var t=document.createElementNS(NS,"text");
+        t.setAttribute("x",cx); t.setAttribute("y",cy-r-6); t.setAttribute("class","ringlbl");
+        t.textContent=rg.name; svg.appendChild(t);
+        var n=document.createElementNS(NS,"text");
+        n.setAttribute("x",cx); n.setAttribute("y",cy-r+10); n.setAttribute("class","ringcnt");
+        n.textContent=rg.members.length?rg.members.length+" · tap to enter":"tap to enter";
+        svg.appendChild(n);
+      }
+    });
+    var core=document.createElementNS(NS,"circle");
+    core.setAttribute("cx",cx); core.setAttribute("cy",cy); core.setAttribute("r",16); core.setAttribute("fill","#14b8a6"); core.setAttribute("opacity",".85");
+    svg.appendChild(core);
+    var you=document.createElementNS(NS,"text");
+    you.setAttribute("x",cx); you.setAttribute("y",cy+34); you.setAttribute("class","ringlbl"); you.textContent="You";
+    svg.appendChild(you);
+    $("ring-note").textContent="Each ring is your tiering — set by you, shown by the wallet. Tap a ring to go deeper.";
+  } else {
+    var members=level.members||[], r0m=40;
+    members.forEach(function(m,i){
+      var r=r0m+i*34;
+      var c2=document.createElementNS(NS,"circle");
+      c2.setAttribute("cx",cx); c2.setAttribute("cy",cy); c2.setAttribute("r",r);
+      c2.setAttribute("fill","none"); c2.setAttribute("stroke",level.color);
+      c2.setAttribute("stroke-width",1.6); c2.setAttribute("opacity",.55);
+      c2.setAttribute("class","ringbtn");
+      c2.addEventListener("click",function(){ ringPath.push({name:m.name,color:level.color,member:m}); drawRings(); });
+      svg.appendChild(c2);
+      var t2=document.createElementNS(NS,"text");
+      t2.setAttribute("x",cx); t2.setAttribute("y",cy-r-6); t2.setAttribute("class","ringlbl");
+      t2.textContent=m.name; svg.appendChild(t2);
+    });
+    if(!members.length){
+      var e=document.createElementNS(NS,"text");
+      e.setAttribute("x",cx); e.setAttribute("y",cy); e.setAttribute("class","ringlbl");
+      e.textContent="Empty — no rings within yet."; svg.appendChild(e);
+    }
+    var core2=document.createElementNS(NS,"circle");
+    core2.setAttribute("cx",cx); core2.setAttribute("cy",cy); core2.setAttribute("r",16); core2.setAttribute("fill",level.color); core2.setAttribute("opacity",".85");
+    svg.appendChild(core2);
+    var nm=document.createElementNS(NS,"text");
+    nm.setAttribute("x",cx); nm.setAttribute("y",cy+34); nm.setAttribute("class","ringlbl"); nm.textContent=level.name;
+    svg.appendChild(nm);
+    $("ring-note").textContent="Rings within rings. Tap a ring to enter it — the structure repeats at every scale.";
+    if(level.member){
+      var m=level.member;
+      $("ring-note").innerHTML="This ring is <b>"+esc(m.name)+"</b> — tier <b>"+esc(TIER_LABEL[m.tier])+"</b> ("+esc(TIER_ACCESS[m.tier])+").<br><span class='mono' style='font-size:.8em'>"+esc(short(m.value))+"</span>";
+    }
+  }
+}
+drawRings();
+
+/* ——— wipe (opt out anytime) ——— */
+$("btn-wipe").onclick=function(){
+  if(!confirm("Wipe the wallet? Your demo identity and people are removed from this device. Nothing was ever sent anywhere.")) return;
+  localStorage.removeItem("uw.contacts"); localStorage.removeItem("uw.demo"); localStorage.removeItem("dccp.ledger");
+  location.reload();
+};
+</script>
+</body>
+</html>

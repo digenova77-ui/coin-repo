@@ -1,0 +1,35 @@
+{
+  "registry_seq": 1,
+  "prev_registry_hash": "NONE (genesis registry)",
+  "issued_at": "2026-10-13T00:37:28Z",
+  "key_status": "TRANSITIONAL - on-lane key; this registry is LEGACY and will be re-sealed when the owner-device ceremony key arms",
+  "endpoints": [
+    {
+      "role": "ledger-head",
+      "url": "https://raw.githubusercontent.com/digenova77-ui/coin-repo/main/ledger/head-manifest.json",
+      "mirror_of": "coin-repo (canonical, sovereign ground)",
+      "also_at": "https://ipfs.dualiscapax.ai/ipfs/QmTYXk3ZrZyKViShzUrLzGFGKcCit4YBcReRZd3pb4Ghgh"
+    },
+    {
+      "role": "ledger-head-ipfs",
+      "url": "https://ipfs.dualiscapax.ai/ipfs/QmTYXk3ZrZyKViShzUrLzGFGKcCit4YBcReRZd3pb4Ghgh",
+      "via": "pinata"
+    },
+    {
+      "role": "chain-segments",
+      "url": "https://raw.githubusercontent.com/digenova77-ui/coin-repo/main/ledger/",
+      "mirror_of": "coin-repo (canonical, sovereign ground)"
+    },
+    {
+      "role": "media",
+      "url": "https://ipfs.dualiscapax.ai/ipfs/<cid>",
+      "via": "pinata",
+      "note": "plates and public artifacts by content hash; the hash is the name - verify on receipt"
+    }
+  ],
+  "signature": {
+    "alg": "Ed25519",
+    "key_id": "a271-8e62-3bff-02d2",
+    "sig": "pk4f26K4T/mNAQyBd32f/LcowQ3uc2Jvhowfpmq501SJbbk2qHDL1Z9DVzE1M1UC90GpJveEPnA697b8SeiGBw=="
+  }
+}

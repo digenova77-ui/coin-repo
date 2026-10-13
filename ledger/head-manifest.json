@@ -1,0 +1,29 @@
+{
+  "alg": "Ed25519",
+  "key_id": "a271-8e62-3bff-02d2",
+  "payload": {
+    "type": "coin-white-ledger-head",
+    "ledger": "coin-repo white ledger (public layer only)",
+    "height": 1,
+    "entries": [
+      {
+        "entry": 0,
+        "file": "ledger/GENESIS.md",
+        "hash": "dd84eca0317ae13fefa9b53654e37d7cef8e3cfeeea7c360cebd7f353090995b"
+      },
+      {
+        "entry": 1,
+        "file": "ledger/GROUND-CONTROL.md",
+        "hash": "6a95cdda044b4558fd985f64383eea5a7021767c219ad6085fe14c0e11c6488c",
+        "prev_hash": "dd84eca0317ae13fefa9b53654e37d7cef8e3cfeeea7c360cebd7f353090995b"
+      }
+    ],
+    "head_hash": "6a95cdda044b4558fd985f64383eea5a7021767c219ad6085fe14c0e11c6488c",
+    "genesis_hash": "dd84eca0317ae13fefa9b53654e37d7cef8e3cfeeea7c360cebd7f353090995b",
+    "issued_at": "2026-10-13T00:36:38Z",
+    "owner_key_id": "9037-6638-6643-83b6",
+    "key_status": "TRANSITIONAL - on-lane keys; this record is LEGACY and will be re-sealed when the owner-device ceremony key arms",
+    "statement": "No issuance has occurred. Beyond genesis and the Ground Control doctrine entry, this ledger is empty of units. The emptiness is the published fact."
+  },
+  "sig": "skHHnOIAdRx7lw8sifl6FDG5Sr2yV8UXWMFMrdgfw4ZAPpvNBFLUnmXToahhtG9Q2mBY+KJVQnMHi0Zo03d8BA=="
+}
